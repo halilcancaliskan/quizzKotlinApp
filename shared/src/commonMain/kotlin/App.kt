@@ -19,13 +19,14 @@ import org.jetbrains.compose.resources.painterResource
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun App() {
-    MaterialTheme {
-        Scaffold {
-            //Home()
-            //Score(score = 0, onRetakeClick = {})
-            Quizz()
+    var score by remember { mutableStateOf(0) }
+        MaterialTheme {
+            Scaffold {
+                //Home()
+                Score(score = score, onRetakeClick = { score = 0 })
+                //Quizz()
+            }
         }
     }
-}
 
 expect fun getPlatformName(): String
