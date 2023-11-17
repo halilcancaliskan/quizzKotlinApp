@@ -22,8 +22,8 @@ fun App() {
     MaterialTheme {
         Scaffold {
             //Home()
-            Score(score = 0, onRetakeClick = {})
-            //Quizz()
+            //Score(score = 0, onRetakeClick = {})
+            Quizz()
         }
     }
 }

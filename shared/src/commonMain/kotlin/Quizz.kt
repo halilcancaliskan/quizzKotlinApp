@@ -39,20 +39,21 @@ fun QuizzOptionRadioButton(
     }
 }
 
-data class QuizQuestion(val text: String, val options: List<QuizzOption>)
+data class QuizQuestion(val text: String, val options: List<QuizzOption>, val correctAnswer: QuizzOption)
 
 @Composable
 fun Quizz() {
     val questions = listOf(
-        QuizQuestion("Android is a great platform?", listOf(QuizzOption.Yes, QuizzOption.No)),
-        QuizQuestion("Do you like coding in Kotlin?", listOf(QuizzOption.Yes, QuizzOption.No)),
-        QuizQuestion("Have you developed an Android app before?", listOf(QuizzOption.Yes, QuizzOption.No))
+        QuizQuestion("Android is a great platform?", listOf(QuizzOption.Yes, QuizzOption.No), QuizzOption.Yes),
+        QuizQuestion("Do you like coding in Kotlin?", listOf(QuizzOption.Yes, QuizzOption.No), QuizzOption.No),
+        QuizQuestion("Have you developed an Android app before?", listOf(QuizzOption.Yes, QuizzOption.No), QuizzOption.Yes)
     )
 
     var currentQuestionIndex by remember { mutableStateOf(0) }
     val currentQuestion = questions.getOrNull(currentQuestionIndex)
 
     var selectedOption by remember { mutableStateOf<QuizzOption?>(null) }
+    var score by remember { mutableStateOf(0) }
 
     MaterialTheme {
         Column(
@@ -79,8 +80,10 @@ fun Quizz() {
                 Button(
                     onClick = {
                         if (selectedOption != null) {
-                            // Handle "Next" button click with the selected option
-                            // For example: you can use the selectedOption here
+                            // Check if the selected option is correct
+                            if (selectedOption == currentQuestion.correctAnswer) {
+                                score++
+                            }
 
                             // Move to the next question or finish the quiz
                             if (currentQuestionIndex < questions.size - 1) {
@@ -88,6 +91,8 @@ fun Quizz() {
                                 selectedOption = null // Reset selected option for the next question
                             } else {
                                 // Quiz finished, you can handle the completion here
+                                // For example, display the score
+                                println("Quiz completed. Your score: $score")
                             }
                         }
                     },
