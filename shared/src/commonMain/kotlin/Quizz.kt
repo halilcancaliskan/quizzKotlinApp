@@ -3,6 +3,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
@@ -10,17 +12,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlinx.serialization.Serializable
+import network.data.Question
 
-enum class QuizzOption(val text: String) {
+enum class QuizOption(val text: String) {
     Yes("Yes"),
     No("No")
 }
 
 @Composable
-fun QuizzOptionRadioButton(
-    option: QuizzOption,
-    selectedOption: QuizzOption?,
-    onOptionSelected: (QuizzOption) -> Unit
+fun QuizOptionRadioButton(
+    option: QuizOption,
+    selectedOption: QuizOption?,
+    onOptionSelected: (QuizOption) -> Unit
 ) {
     val isSelected = option == selectedOption
     val radioButtonColor = if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.secondary
@@ -38,22 +42,34 @@ fun QuizzOptionRadioButton(
         Text(text = option.text)
     }
 }
-
-data class QuizQuestion(val text: String, val options: List<QuizzOption>, val correctAnswer: QuizzOption)
+@Serializable
+data class QuizQuestion(val text: String, val options: List<QuizOption>, val correctAnswer: QuizOption)
 
 @Composable
 fun Quizz() {
     val questions = listOf(
-        QuizQuestion("Android is a great platform?", listOf(QuizzOption.Yes, QuizzOption.No), QuizzOption.Yes),
-        QuizQuestion("Do you like coding in Kotlin?", listOf(QuizzOption.Yes, QuizzOption.No), QuizzOption.No),
-        QuizQuestion("Have you developed an Android app before?", listOf(QuizzOption.Yes, QuizzOption.No), QuizzOption.Yes)
+        QuizQuestion(
+            text = "Do you like Compose?",
+            options = listOf(QuizOption.Yes, QuizOption.No),
+            correctAnswer = QuizOption.Yes
+        ),
+        QuizQuestion(
+            text = "Do you like Kotlin?",
+            options = listOf(QuizOption.Yes, QuizOption.No),
+            correctAnswer = QuizOption.Yes
+        ),
+        QuizQuestion(
+            text = "Do you like Multiplatform?",
+            options = listOf(QuizOption.Yes, QuizOption.No),
+            correctAnswer = QuizOption.Yes
+        )
     )
 
     var currentQuestionIndex by remember { mutableStateOf(0) }
     val currentQuestion = questions.getOrNull(currentQuestionIndex)
 
-    var selectedOption by remember { mutableStateOf<QuizzOption?>(null) }
-    var score by remember { mutableStateOf(0) }
+    var selectedOption by remember { mutableStateOf<QuizOption?>(null) }
+    var correctAnswers by remember { mutableStateOf(0) }
 
     MaterialTheme {
         Column(
@@ -61,20 +77,26 @@ fun Quizz() {
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            currentQuestion?.let {
+            currentQuestion?.let { it ->
                 Text(text = it.text, style = MaterialTheme.typography.h5)
 
-                // Radio buttons for "Yes" and "No"
-                QuizzOptionRadioButton(
-                    option = QuizzOption.Yes,
+                QuizOptionRadioButton(
+                    option = QuizOption.Yes,
                     selectedOption = selectedOption,
                     onOptionSelected = { selectedOption = it }
                 )
-                QuizzOptionRadioButton(
-                    option = QuizzOption.No,
+                QuizOptionRadioButton(
+                    option = QuizOption.No,
                     selectedOption = selectedOption,
                     onOptionSelected = { selectedOption = it }
                 )
+
+                // Button text
+                val buttonText = if (currentQuestionIndex < questions.size - 1) {
+                    "Next"
+                } else {
+                    "Envoyer"
+                }
 
                 // Next button
                 Button(
@@ -82,7 +104,7 @@ fun Quizz() {
                         if (selectedOption != null) {
                             // Check if the selected option is correct
                             if (selectedOption == currentQuestion.correctAnswer) {
-                                score++
+                                correctAnswers++
                             }
 
                             // Move to the next question or finish the quiz
@@ -90,17 +112,22 @@ fun Quizz() {
                                 currentQuestionIndex++
                                 selectedOption = null // Reset selected option for the next question
                             } else {
-                                // Quiz finished, you can handle the completion here
-                                // For example, display the score
-                                println("Quiz completed. Your score: $score")
+                                // Quiz finished, display the score
+                                val totalQuestions = questions.size
+                                println("Quiz completed. Your score: $correctAnswers/$totalQuestions")
                             }
                         }
                     },
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    Text(text = "Next")
+                    Text(text = buttonText)
                 }
+                LinearProgressIndicator(
+                    progress = (currentQuestionIndex + 1) / questions.size.toFloat(),
+                    modifier = Modifier.fillMaxWidth().height(8.dp)
+                )
             }
         }
     }
 }
+

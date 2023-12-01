@@ -11,14 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Score(score: Int, onRetakeClick: () -> Unit) {
+fun Score(score: Int, totalQuestions: Int, onRetakeClick: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Score: $score / 20",
+            text = "Score: $score / $totalQuestions",
             style = MaterialTheme.typography.h5,
             modifier = Modifier.padding(16.dp)
         )
