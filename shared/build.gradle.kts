@@ -35,6 +35,11 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3") // For making asynchronous calls
                 implementation("io.ktor:ktor-client-content-negotiation:2.3.4") // Simplify handling of content type based deserialization
                 implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.4") // make your dataclasses serializable
+                implementation("app.cash.sqldelight:runtime:2.0.0")
+                implementation("app.cash.sqldelight:coroutines-extensions:2.0.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
+                api("moe.tlaster:precompose:1.5.7")
+
             }
         }
         val androidMain by getting {
@@ -43,6 +48,7 @@ kotlin {
                 api("androidx.appcompat:appcompat:1.6.1")
                 api("androidx.core:core-ktx:1.12.0")
                 implementation("io.ktor:ktor-client-android:2.3.4") // for Android
+                implementation("app.cash.sqldelight:android-driver:2.0.0")
             }
         }
         val iosX64Main by getting
@@ -52,6 +58,7 @@ kotlin {
         val iosMain by creating {
             dependencies {
                 implementation("io.ktor:ktor-client-darwin:2.3.4") //for iOS
+                implementation("app.cash.sqldelight:native-driver:2.0.0")
             }
 
             dependsOn(commonMain)
@@ -63,6 +70,7 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.common)
                 implementation("io.ktor:ktor-client-apache:2.3.4")
+                implementation("app.cash.sqldelight:sqlite-driver:2.0.0")
             }
         }
     }

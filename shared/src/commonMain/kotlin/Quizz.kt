@@ -1,133 +1,113 @@
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import kotlinx.serialization.Serializable
+import androidx.compose.ui.unit.sp
+import network.data.Answer
 import network.data.Question
 
-enum class QuizOption(val text: String) {
-    Yes("Yes"),
-    No("No")
+@Composable
+internal fun customBtn(iv: ImageVector, label: String) {
+    Icon(
+        iv,
+        contentDescription = "Localized description",
+        Modifier.padding(end = 15.dp)
+    )
+    Text(label)
 }
 
 @Composable
-fun QuizOptionRadioButton(
-    option: QuizOption,
-    selectedOption: QuizOption?,
-    onOptionSelected: (QuizOption) -> Unit
-) {
-    val isSelected = option == selectedOption
-    val radioButtonColor = if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.secondary
-
-    Row(
-        modifier = Modifier.padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        RadioButton(
-            selected = isSelected,
-            onClick = { onOptionSelected(option) },
-            colors = RadioButtonDefaults.colors(selectedColor = radioButtonColor)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = option.text)
+internal fun questionCard(question: Question) {
+    Card() {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(horizontal = 10.dp)
+        ) {
+            Text(
+                modifier = Modifier.padding(all = 10.dp),
+                text = question.label,
+                fontSize = 25.sp,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
-@Serializable
-data class QuizQuestion(val text: String, val options: List<QuizOption>, val correctAnswer: QuizOption)
 
 @Composable
-fun Quizz() {
-    val questions = listOf(
-        QuizQuestion(
-            text = "Do you like Compose?",
-            options = listOf(QuizOption.Yes, QuizOption.No),
-            correctAnswer = QuizOption.Yes
-        ),
-        QuizQuestion(
-            text = "Do you like Kotlin?",
-            options = listOf(QuizOption.Yes, QuizOption.No),
-            correctAnswer = QuizOption.Yes
-        ),
-        QuizQuestion(
-            text = "Do you like Multiplatform?",
-            options = listOf(QuizOption.Yes, QuizOption.No),
-            correctAnswer = QuizOption.Yes
-        )
-    )
-
-    var currentQuestionIndex by remember { mutableStateOf(0) }
-    val currentQuestion = questions.getOrNull(currentQuestionIndex)
-
-    var selectedOption by remember { mutableStateOf<QuizOption?>(null) }
-    var correctAnswers by remember { mutableStateOf(0) }
-
-    MaterialTheme {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            currentQuestion?.let { it ->
-                Text(text = it.text, style = MaterialTheme.typography.h5)
-
-                QuizOptionRadioButton(
-                    option = QuizOption.Yes,
-                    selectedOption = selectedOption,
-                    onOptionSelected = { selectedOption = it }
+internal fun answerOptions(answers: List<Answer>, selectedAnswer: Int, onAnswerSelected: (Int) -> Unit) {
+    Column(modifier = Modifier.selectableGroup()) {
+        answers.forEach { answer ->
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RadioButton(
+                    modifier = Modifier.padding(end = 16.dp),
+                    selected = (selectedAnswer == answer.id),
+                    onClick = { onAnswerSelected(answer.id) },
                 )
-                QuizOptionRadioButton(
-                    option = QuizOption.No,
-                    selectedOption = selectedOption,
-                    onOptionSelected = { selectedOption = it }
-                )
-
-                // Button text
-                val buttonText = if (currentQuestionIndex < questions.size - 1) {
-                    "Next"
-                } else {
-                    "Envoyer"
-                }
-
-                // Next button
-                Button(
-                    onClick = {
-                        if (selectedOption != null) {
-                            // Check if the selected option is correct
-                            if (selectedOption == currentQuestion.correctAnswer) {
-                                correctAnswers++
-                            }
-
-                            // Move to the next question or finish the quiz
-                            if (currentQuestionIndex < questions.size - 1) {
-                                currentQuestionIndex++
-                                selectedOption = null // Reset selected option for the next question
-                            } else {
-                                // Quiz finished, display the score
-                                val totalQuestions = questions.size
-                                println("Quiz completed. Your score: $correctAnswers/$totalQuestions")
-                            }
-                        }
-                    },
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(text = buttonText)
-                }
-                LinearProgressIndicator(
-                    progress = (currentQuestionIndex + 1) / questions.size.toFloat(),
-                    modifier = Modifier.fillMaxWidth().height(8.dp)
-                )
+                Text(text = answer.label)
             }
         }
     }
 }
 
+@Composable
+internal fun questionScreen(questions: List<Question>) {
+    var questionProgress by remember { mutableStateOf(0) }
+    var selectedAnswer by remember { mutableStateOf(1) }
+    var score by remember { mutableStateOf(0) }
+
+    Column(
+        modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        questionCard(questions[questionProgress])
+
+        answerOptions(
+            answers = questions[questionProgress].answers,
+            selectedAnswer = selectedAnswer,
+            onAnswerSelected = { selectedAnswer = it }
+        )
+
+        Column(
+            modifier = Modifier.fillMaxHeight(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            Button(
+                modifier = Modifier.padding(bottom = 20.dp),
+                onClick = {
+                    if (selectedAnswer == questions[questionProgress].correctAnswerId) {
+                        score++
+                    }
+                    if (questionProgress < questions.size - 1) {
+                        questionProgress++
+                        selectedAnswer = 1
+                    } else {
+                        // Print the score to the console
+                        println("Final Score: $score")
+                    }
+                }
+            ) {
+                if (questionProgress < questions.size - 1) customBtn(Icons.Filled.ArrowForward, "Next")
+                else customBtn(Icons.Filled.Done, "Done")
+            }
+
+            LinearProgressIndicator(
+                modifier = Modifier.fillMaxWidth().height(20.dp),
+                progress = questionProgress.div(questions.size.toFloat()).plus(1.div(questions.size.toFloat()))
+            )
+        }
+    }
+}
