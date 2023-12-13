@@ -1,11 +1,6 @@
 import io.ktor.utils.io.core.Closeable
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 import network.QuizAPI
 import network.data.Question
 
@@ -13,8 +8,8 @@ class QuizRepository : Closeable {
 
     private val quizAPI = QuizAPI()
     private val coroutineScope = CoroutineScope(Job() + Dispatchers.IO)
-    private var _questionState = MutableStateFlow(emptyList<Question>())
-    var questionState = _questionState
+    private val _questionState = MutableStateFlow(emptyList<Question>())
+    val questionState get() = _questionState
 
     init {
         updateQuiz()

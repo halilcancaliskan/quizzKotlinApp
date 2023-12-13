@@ -4,15 +4,16 @@ import androidx.compose.runtime.collectAsState
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 private val repository = QuizRepository()
+
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun App() {
     MaterialTheme {
         val questions = repository.questionState.collectAsState()
-        if (questions.value.isNotEmpty()) {
-            questionScreen(questions.value)
-        }
 
+        if (questions.value.isNotEmpty()) {
+            QuestionScreen(questions.value)
+        }
     }
 }
 

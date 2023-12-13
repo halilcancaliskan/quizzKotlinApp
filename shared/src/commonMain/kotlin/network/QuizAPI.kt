@@ -13,7 +13,7 @@ class QuizAPI {
     private val httpClient = HttpClient {
         install(ContentNegotiation) {
             json(
-                contentType = ContentType.Text.Plain, // because Github is not returning an 'application/json' header
+                contentType = ContentType.Text.Plain,
                 json = Json {
                     ignoreUnknownKeys = true
                     useAlternativeNames = false

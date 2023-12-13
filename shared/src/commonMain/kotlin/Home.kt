@@ -1,9 +1,4 @@
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -16,21 +11,25 @@ import androidx.compose.ui.unit.dp
 internal fun Home() {
     MaterialTheme {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text("Quizz", style = MaterialTheme.typography.h4)
             Text(
                 "A simple quizz to discover KMP, KMM, and Compose.",
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.body1,
+                modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
             )
 
-            Spacer(modifier = Modifier.size(16.dp))
-
             Button(
-                onClick = { /* Handle button click here */ },
-                modifier = Modifier.padding(16.dp)
+                onClick = {
+                          // Rien
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
             ) {
                 Text("Start the Quizz")
             }

@@ -16,9 +16,9 @@ import network.data.Answer
 import network.data.Question
 
 @Composable
-internal fun customBtn(iv: ImageVector, label: String) {
+internal fun CustomButton(imageVector: ImageVector, label: String) {
     Icon(
-        iv,
+        imageVector,
         contentDescription = "Localized description",
         Modifier.padding(end = 15.dp)
     )
@@ -26,7 +26,7 @@ internal fun customBtn(iv: ImageVector, label: String) {
 }
 
 @Composable
-internal fun questionCard(question: Question) {
+internal fun QuestionCard(question: Question) {
     Card() {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -43,7 +43,7 @@ internal fun questionCard(question: Question) {
 }
 
 @Composable
-internal fun answerOptions(answers: List<Answer>, selectedAnswer: Int, onAnswerSelected: (Int) -> Unit) {
+internal fun AnswerOptions(answers: List<Answer>, selectedAnswer: Int, onAnswerSelected: (Int) -> Unit) {
     Column(modifier = Modifier.selectableGroup()) {
         answers.forEach { answer ->
             Row(
@@ -62,7 +62,7 @@ internal fun answerOptions(answers: List<Answer>, selectedAnswer: Int, onAnswerS
 }
 
 @Composable
-internal fun questionScreen(questions: List<Question>) {
+internal fun QuestionScreen(questions: List<Question>) {
     var questionProgress by remember { mutableStateOf(0) }
     var selectedAnswer by remember { mutableStateOf(1) }
     var score by remember { mutableStateOf(0) }
@@ -72,9 +72,9 @@ internal fun questionScreen(questions: List<Question>) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        questionCard(questions[questionProgress])
+        QuestionCard(questions[questionProgress])
 
-        answerOptions(
+        AnswerOptions(
             answers = questions[questionProgress].answers,
             selectedAnswer = selectedAnswer,
             onAnswerSelected = { selectedAnswer = it }
@@ -100,8 +100,8 @@ internal fun questionScreen(questions: List<Question>) {
                     }
                 }
             ) {
-                if (questionProgress < questions.size - 1) customBtn(Icons.Filled.ArrowForward, "Next")
-                else customBtn(Icons.Filled.Done, "Done")
+                if (questionProgress < questions.size - 1) CustomButton(Icons.Filled.ArrowForward, "Next")
+                else CustomButton(Icons.Filled.Done, "Done")
             }
 
             LinearProgressIndicator(
