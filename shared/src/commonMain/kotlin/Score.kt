@@ -16,17 +16,30 @@ fun Score(score: Int, totalQuestions: Int, onRetakeClick: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Score: $score / $totalQuestions",
-            style = MaterialTheme.typography.h5,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+        ScoreText(score, totalQuestions)
 
-        Button(
-            onClick = { onRetakeClick() },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Retake the Quiz")
-        }
+        RetakeButton(onRetakeClick)
+    }
+}
+
+@Composable
+private fun ScoreText(score: Int, totalQuestions: Int) {
+    Text(
+        text = "Score: $score / $totalQuestions",
+        style = MaterialTheme.typography.h5,
+        modifier = Modifier.padding(bottom = 16.dp)
+    )
+}
+
+@Composable
+private fun RetakeButton(onRetakeClick: () -> Unit) {
+    Button(
+        onClick = {
+            onRetakeClick()
+            println("Retake the quizz")
+                  },
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(text = "Retake the quizz")
     }
 }

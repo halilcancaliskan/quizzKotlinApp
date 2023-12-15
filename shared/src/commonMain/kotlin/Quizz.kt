@@ -95,13 +95,12 @@ internal fun QuestionScreen(questions: List<Question>) {
                         questionProgress++
                         selectedAnswer = 1
                     } else {
-                        // Print the score to the console
                         println("Final Score: $score")
                     }
                 }
             ) {
                 if (questionProgress < questions.size - 1) CustomButton(Icons.Filled.ArrowForward, "Next")
-                else CustomButton(Icons.Filled.Done, "Done")
+                else CustomButton(Icons.Filled.Done, "Finish")
             }
 
             LinearProgressIndicator(

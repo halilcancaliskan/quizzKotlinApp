@@ -17,22 +17,33 @@ internal fun Home() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Quizz", style = MaterialTheme.typography.h4)
             Text(
-                "A simple quizz to discover KMP, KMM, and Compose.",
+                text = "Halil-Can Caliskan",
+                style = MaterialTheme.typography.h4
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "TP Composables Kotlin.",
                 style = MaterialTheme.typography.body1,
-                modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            Button(
+            StartButton(
                 onClick = {
-                          // Rien
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text("Start the Quizz")
-            }
+                    // TODO
+                }
+            )
         }
+    }
+}
+
+@Composable
+private fun StartButton(onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Text("Start")
     }
 }

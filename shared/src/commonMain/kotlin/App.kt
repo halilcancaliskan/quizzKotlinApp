@@ -14,6 +14,8 @@ fun App() {
         if (questions.value.isNotEmpty()) {
             QuestionScreen(questions.value)
         }
+        //Home()
+        //Score(8, 10, {})
     }
 }
 
