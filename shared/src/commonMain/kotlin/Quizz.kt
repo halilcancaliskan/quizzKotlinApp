@@ -27,10 +27,15 @@ internal fun CustomButton(imageVector: ImageVector, label: String) {
 
 @Composable
 internal fun QuestionCard(question: Question) {
-    Card() {
+    Card(
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(horizontal = 10.dp)
+            modifier = Modifier.padding(10.dp)
         ) {
             Text(
                 modifier = Modifier.padding(all = 10.dp),
@@ -41,6 +46,7 @@ internal fun QuestionCard(question: Question) {
         }
     }
 }
+
 
 @Composable
 internal fun AnswerOptions(answers: List<Answer>, selectedAnswer: Int, onAnswerSelected: (Int) -> Unit) {
